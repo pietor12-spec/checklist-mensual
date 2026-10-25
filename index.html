@@ -10,9 +10,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Checklist">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest?v=4">
+<link rel="icon" href="icon.svg?v=4" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png?v=4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -43,8 +43,13 @@ input{font:inherit;color:inherit}
 #splash{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .4s ease,visibility .4s}
 #splash.hide{opacity:0;visibility:hidden}
 #splash .mark{width:104px;height:104px;animation:pop .7s cubic-bezier(.2,1.4,.4,1) both}
-#splash .mark .ring{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .8s .35s cubic-bezier(.6,0,.2,1) forwards}
-#splash .mark .tick{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .55s 1s cubic-bezier(.6,0,.2,1) forwards}
+#splash .mark .ck{stroke-dasharray:1;stroke-dashoffset:1}
+#splash .mark .bx{fill-opacity:0}
+#splash .mark .ln{opacity:.35}
+#splash .mark .bx0{animation:fillb .2s .85s forwards}#splash .mark .ck0{animation:draw .3s .85s cubic-bezier(.6,0,.2,1) forwards}#splash .mark .ln0{animation:lit .3s .85s forwards}
+#splash .mark .bx1{animation:fillb .2s 1.6s forwards}#splash .mark .ck1{animation:draw .3s 1.6s cubic-bezier(.6,0,.2,1) forwards}#splash .mark .ln1{animation:lit .3s 1.6s forwards}
+#splash .mark .bx2{animation:fillb .2s 2.3s forwards}#splash .mark .ck2{animation:draw .3s 2.3s cubic-bezier(.6,0,.2,1) forwards}#splash .mark .ln2{animation:lit .3s 2.3s forwards}
+@keyframes lit{to{opacity:1}}@keyframes fillb{to{fill-opacity:1}}
 #splash .word{font-family:var(--serif);font-size:46px;letter-spacing:-.5px;line-height:1;opacity:0;transform:translateY(8px);animation:up .7s .55s ease forwards}
 #splash .bar{width:148px;height:3px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:6px;opacity:0;animation:fade .3s .2s forwards}
 #splash .bar i{display:block;height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:3px;animation:load 2.4s .2s cubic-bezier(.45,.05,.35,1) forwards}
@@ -168,7 +173,7 @@ footer{text-align:center;color:var(--faint);font-size:12.5px;margin-top:34px;lin
 #party.on{opacity:1;visibility:visible}
 #party .box2{text-align:center;max-width:340px;transform:scale(.9);transition:transform .5s cubic-bezier(.2,1.4,.4,1)}
 #party.on .box2{transform:none}
-#party .medal{width:120px;height:120px;margin:0 auto 18px;filter:drop-shadow(0 18px 30px rgba(17,154,94,.35))}
+#party .medal{width:116px;height:116px;border-radius:28px;margin:0 auto 18px;filter:drop-shadow(0 18px 30px rgba(17,154,94,.35))}
 #party h2{font-family:var(--serif);font-weight:400;font-size:42px;line-height:1.05;margin:0 0 10px}
 #party p{color:var(--mute);margin:0 0 24px;line-height:1.5;font-size:15.5px}
 .cta{background:var(--ink);color:var(--bg);padding:15px 28px;border-radius:16px;font-weight:600;font-size:16px}
@@ -183,21 +188,14 @@ footer{text-align:center;color:var(--faint);font-size:12.5px;margin-top:34px;lin
 
 <!-- Splash -->
 <div id="splash" aria-hidden="true">
-  <svg class="mark" viewBox="0 0 512 512">
-    <defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B6B5C"/><stop offset="1" stop-color="#22C47A"/></linearGradient></defs>
-    <rect width="512" height="512" rx="120" fill="url(#sg)"/>
-    <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
-      <path class="ring" pathLength="1" d="M376.3 212.2A128 128 0 1 1 299.8 135.7" stroke-width="34"/>
-      <path class="tick" pathLength="1" d="M182 258l56 56L392 160" stroke-width="40"/>
-    </g>
-  </svg>
+  <svg class="mark" viewBox="0 0 512 512"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B6B5C"/><stop offset="1" stop-color="#22C47A"/></linearGradient></defs><rect width="512" height="512" rx="120" fill="url(#sg)"/><rect class="bx bx0" x="128" y="140" width="56" height="56" rx="16" fill="#fff" stroke="#fff" stroke-width="12"/><rect class="ln ln0" x="224" y="155" width="160" height="26" rx="13" fill="#fff"/><path class="ck ck0" pathLength="1" d="M143 169l11 11 21-24" fill="none" stroke="#0F8A63" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><rect class="bx bx1" x="128" y="228" width="56" height="56" rx="16" fill="#fff" stroke="#fff" stroke-width="12"/><rect class="ln ln1" x="224" y="243" width="128" height="26" rx="13" fill="#fff"/><path class="ck ck1" pathLength="1" d="M143 257l11 11 21-24" fill="none" stroke="#0F8A63" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><rect class="bx bx2" x="128" y="316" width="56" height="56" rx="16" fill="#fff" stroke="#fff" stroke-width="12"/><rect class="ln ln2" x="224" y="331" width="148" height="26" rx="13" fill="#fff"/><path class="ck ck2" pathLength="1" d="M143 345l11 11 21-24" fill="none" stroke="#0F8A63" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg>
   <div class="word">Checklist</div>
   <div class="bar"><i></i></div>
 </div>
 
 <div class="wrap" id="app">
   <header>
-    <svg class="logo" viewBox="0 0 512 512"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B6B5C"/><stop offset="1" stop-color="#22C47A"/></linearGradient></defs><rect width="512" height="512" rx="120" fill="url(#lg)"/><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"><path d="M376.3 212.2A128 128 0 1 1 299.8 135.7" stroke-width="34"/><path d="M182 258l56 56L392 160" stroke-width="40"/></g></svg>
+    <svg class="logo" viewBox="0 0 512 512"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B6B5C"/><stop offset="1" stop-color="#22C47A"/></linearGradient></defs><rect width="512" height="512" rx="120" fill="url(#lg)"/><rect x="128" y="140" width="56" height="56" rx="16" fill="#fff" stroke="#fff" stroke-width="12"/><rect x="224" y="155" width="160" height="26" rx="13" fill="#fff"/><path d="M143 169l11 11 21-24" fill="none" stroke="#0F8A63" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><rect x="128" y="228" width="56" height="56" rx="16" fill="#fff" stroke="#fff" stroke-width="12"/><rect x="224" y="243" width="128" height="26" rx="13" fill="#fff"/><path d="M143 257l11 11 21-24" fill="none" stroke="#0F8A63" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><rect x="128" y="316" width="56" height="56" rx="16" fill="#fff" stroke="#fff" stroke-width="12"/><rect x="224" y="331" width="148" height="26" rx="13" fill="#fff"/><path d="M143 345l11 11 21-24" fill="none" stroke="#0F8A63" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <div class="brand">Checklist</div>
     <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema">
       <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
@@ -249,7 +247,7 @@ footer{text-align:center;color:var(--faint);font-size:12.5px;margin-top:34px;lin
 <!-- Celebration -->
 <div id="party" role="dialog" aria-label="Todo completado">
   <div class="box2">
-    <svg class="medal" viewBox="0 0 512 512"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B6B5C"/><stop offset="1" stop-color="#22C47A"/></linearGradient></defs><circle cx="256" cy="256" r="240" fill="url(#pg)"/><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"><path d="M376.3 212.2A128 128 0 1 1 299.8 135.7" stroke-width="30"/><path d="M182 258l56 56L392 160" stroke-width="36"/></g></svg>
+    <svg class="medal" viewBox="0 0 512 512"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B6B5C"/><stop offset="1" stop-color="#22C47A"/></linearGradient></defs><rect width="512" height="512" rx="120" fill="url(#pg)"/><rect x="128" y="140" width="56" height="56" rx="16" fill="#fff" stroke="#fff" stroke-width="12"/><rect x="224" y="155" width="160" height="26" rx="13" fill="#fff"/><path d="M143 169l11 11 21-24" fill="none" stroke="#0F8A63" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><rect x="128" y="228" width="56" height="56" rx="16" fill="#fff" stroke="#fff" stroke-width="12"/><rect x="224" y="243" width="128" height="26" rx="13" fill="#fff"/><path d="M143 257l11 11 21-24" fill="none" stroke="#0F8A63" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><rect x="128" y="316" width="56" height="56" rx="16" fill="#fff" stroke="#fff" stroke-width="12"/><rect x="224" y="331" width="148" height="26" rx="13" fill="#fff"/><path d="M143 345l11 11 21-24" fill="none" stroke="#0F8A63" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <h2>¡Todo hecho!</h2>
     <p id="partyMsg"></p>
     <button class="cta" id="partyOk">Genial</button>
