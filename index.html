@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}[hidden]{display:none!important}</style>
+<title>Checklist Mensual</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#4F46E5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: cabecera índigo con anillo de progreso + tarjetas por fecha del mes, una columna móvil */
+:root{
+  --bg:#F2F3F9; --card:#FFFFFF; --fg:#1C1F2E; --muted:#6B7090; --line:#E4E6F0;
+  --accent:#4F46E5; --accent-soft:#ECEBFF; --done:#22B35E; --done-soft:#E3F7EB; --danger:#E5484D;
+  --head:#4F46E5; --head-fg:#FFFFFF;
+  --f-display:"Bricolage Grotesque",ui-rounded,system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11121A; --card:#1B1D29; --fg:#ECEEF8; --muted:#9397B5; --line:#2A2D3E;
+  --accent:#8C86FF; --accent-soft:#2A2850; --done:#3CCB7F; --done-soft:#173326; --danger:#FF6B70;
+  --head:#2B2770; --head-fg:#FFFFFF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11121A; --card:#1B1D29; --fg:#ECEEF8; --muted:#9397B5; --line:#2A2D3E;
+  --accent:#8C86FF; --accent-soft:#2A2850; --done:#3CCB7F; --done-soft:#173326; --danger:#FF6B70;
+  --head:#2B2770; --head-fg:#FFFFFF; color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--head)}
+.wrap{max-width:520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 120px}
+header{background:var(--head);color:var(--head-fg);border-radius:0 0 28px 28px;padding-block:20px 26px;margin-bottom:18px}
+header .in{max-width:520px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:18px}
+.ring{flex:none;width:84px;height:84px;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:22px;font-variant-numeric:tabular-nums}
+.hgroup{min-width:0;flex:1}
+.month{font-size:13px;text-transform:uppercase;letter-spacing:.08em;opacity:.8;font-weight:700}
+h1{font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1.05;margin:4px 0 6px;text-wrap:balance}
+.count{font-size:14px;opacity:.85}
+.toolbar{display:flex;gap:8px;margin:0 0 16px}
+.btn{font:inherit;font-weight:700;font-size:14px;border:0;border-radius:999px;padding:10px 16px;cursor:pointer;background:var(--card);color:var(--fg);box-shadow:0 0 0 1px var(--line)}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:none}
+.btn:focus-visible,.check:focus-visible,.row button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn.grow{flex:1}
+.section{margin-bottom:20px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:0 4px 8px}
+.sec-title{font-family:var(--f-display);font-weight:800;font-size:19px}
+.sec-meta{font-size:13px;color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
+.sec-meta.ok{color:var(--done)}
+.card{background:var(--card);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(20,20,60,.06)}
+.item+.item{border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:12px;padding:14px 14px;min-height:58px}
+.sub .row{padding:10px 14px 10px 54px;min-height:48px}
+.sub{background:color-mix(in srgb,var(--bg) 55%,var(--card))}
+.check{flex:none;width:28px;height:28px;border-radius:50%;border:2.5px solid var(--line);background:transparent;display:grid;place-items:center;cursor:pointer;padding:0;transition:background .18s,border-color .18s,transform .12s}
+.sub .check{width:24px;height:24px;border-radius:8px}
+.check svg{width:16px;height:16px;stroke:#fff;stroke-width:3.5;fill:none;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .25s ease .05s}
+.check.on{background:var(--done);border-color:var(--done)}
+.check.on svg{stroke-dashoffset:0}
+.check:active{transform:scale(.88)}
+.check.partial{border-color:var(--done)}
+.txt{flex:1;min-width:0;line-height:1.35;font-size:16px;cursor:pointer}
+.sub .txt{font-size:15px}
+.txt small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.done>.row .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--muted) 60%,transparent)}
+.chev{flex:none;border:0;background:var(--accent-soft);color:var(--accent);width:32px;height:32px;border-radius:10px;display:grid;place-items:center;cursor:pointer;font-weight:700;font-size:13px}
+.chev svg{width:14px;height:14px;transition:transform .2s;stroke:currentColor;stroke-width:3;fill:none}
+.open .chev svg{transform:rotate(180deg)}
+.item:not(.open)>.sub{display:none}
+/* edición */
+.edit-in{flex:1;min-width:0;font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:9px 10px}
+.edit-in:focus{outline:none;border-color:var(--accent)}
+.sec-in{font-family:var(--f-display);font-weight:800;font-size:18px}
+.del{flex:none;border:0;background:transparent;color:var(--danger);width:36px;height:36px;border-radius:10px;font-size:22px;line-height:1;cursor:pointer}
+.add{display:block;width:100%;text-align:left;border:0;background:transparent;color:var(--accent);font:inherit;font-weight:700;font-size:14px;padding:12px 14px;cursor:pointer}
+.sub .add{padding-left:54px}
+.mv{flex:none;border:0;background:var(--accent-soft);color:var(--accent);width:30px;height:30px;border-radius:8px;cursor:pointer;font-weight:700}
+/* modal / celebración */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(10,10,30,.55);display:grid;place-items:center;padding:24px}
+.dialog{background:var(--card);border-radius:28px;padding:28px 24px 22px;max-width:380px;width:100%;text-align:center;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+.trophy{font-size:64px;line-height:1}
+.dialog h2{font-family:var(--f-display);font-weight:800;font-size:28px;margin:12px 0 8px;text-wrap:balance}
+.dialog p{color:var(--muted);margin:0 0 20px;line-height:1.45}
+.dialog .btns{display:flex;flex-direction:column;gap:10px}
+.dialog .btn{padding:14px}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:12px 18px;border-radius:999px;font-weight:700;font-size:14px;z-index:70;white-space:nowrap}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header><div class="in">
+  <div class="ring" aria-hidden="true">
+    <svg width="84" height="84" viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" stroke="rgba(255,255,255,.22)" stroke-width="9" fill="none"/><circle id="ringFg" cx="42" cy="42" r="36" stroke="#7CF0A9" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2" style="transition:stroke-dashoffset .5s ease"/></svg>
+    <div class="pct" id="pct">0%</div>
+  </div>
+  <div class="hgroup">
+    <div class="month" id="month"></div>
+    <h1 id="title">Checklist Mensual Inversiones</h1>
+    <div class="count" id="count"></div>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <div class="toolbar">
+    <button class="btn grow" id="editBtn" type="button">✏️ Editar</button>
+    <button class="btn grow" id="resetBtn" type="button">↺ Nuevo mes</button>
+  </div>
+  <main id="list"></main>
+</div>
+<canvas id="confetti" hidden></canvas>
+
+<script>
+const KEY='checklist-mensual-v1';
+const uid=()=>Math.random().toString(36).slice(2,9);
+const T=(text,sub=[])=>({id:uid(),text,done:false,open:false,sub:sub.map(s=>({id:uid(),text:s,done:false}))});
+const DEFAULT=()=>({title:'Checklist Mensual Inversiones',celebrated:false,sections:[
+ {id:uid(),title:'30 de cada mes',items:[
+  T('Actualizar Checklist Dashboard Personal',[
+   'Alertas: comprobar que se han pasado bien los datos',
+   'Dividendos: están todos y coincide con la app de dividendos',
+   'Fondos: mirar MyInvestor, actualizar las tres carteras y la tabla comparativa',
+   'Inmuebles: revisar si ha finalizado algún proyecto',
+   'Crypto: actualizar precio',
+   'Ahorros: intereses / saveback / staking y Fondo de emergencia',
+   'Resumen: gráfico por plataforma (Trade Republic): valor actual − beneficio/pérdida',
+   'Comparativa: gráfico de evolución con el último mes de Trade Republic y el KPI de rentabilidad',
+   'Libertad Financiera: actualizar KPI principal',
+   'Alertas: ¿alguna en zona de venta? Revisar gráfico y vender si toca']),
+  T('Actualizar los 2 Excel para Claude',['Compras Mensuales (precio actual…)','Investing con todos los datos']),
+  T('Actualizar Dashboard de compras mensuales'),
+  T('Elegir compras mensuales con el Dashboard y gráficos de TradingView'),
+  T('Programar las compras en Trade Republic')]},
+ {id:uid(),title:'2–3 de cada mes',items:[
+  T('Descargar las compras, mandarlas a la carpeta Organizador de documentos y activar el organizador en Claude'),
+  T('App Div Tracker: actualizar las empresas compradas'),
+  T('App Alquileres: actualizar los alquileres')]}
+]});
+let S, editing=false;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.sections)S=DEFAULT();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const CHK='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CHEV='<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function counts(){let t=0,d=0;S.sections.forEach(s=>s.items.forEach(i=>{if(i.sub.length){i.sub.forEach(x=>{t++;if(x.done)d++})}else{t++;if(i.done)d++}}));return{t,d}}
+function secCounts(s){let t=0,d=0;s.items.forEach(i=>{t++;if(i.done)d++});return{t,d}}
+
+function render(){
+  const m=new Date().toLocaleDateString('es-ES',{month:'long',year:'numeric'});
+  document.getElementById('month').textContent=m;
+  document.getElementById('title').textContent=S.title;
+  const {t,d}=counts(),p=t?Math.round(d/t*100):0;
+  document.getElementById('pct').textContent=p+'%';
+  document.getElementById('ringFg').style.strokeDashoffset=226.2*(1-(t?d/t:0));
+  document.getElementById('count').textContent=t===d&&t?'¡Todo hecho este mes!':`${d} de ${t} hechas · faltan ${t-d}`;
+  document.getElementById('editBtn').textContent=editing?'✓ Listo':'✏️ Editar';
+  document.getElementById('editBtn').classList.toggle('primary',editing);
+  document.getElementById('resetBtn').hidden=editing;
+  let h='';
+  if(editing)h+=`<div class="section"><input class="edit-in sec-in" id="in-title" data-k="title" value="${esc(S.title)}" style="width:100%"></div>`;
+  S.sections.forEach((s,si)=>{
+    const c=secCounts(s);
+    h+=`<section class="section"><div class="sec-head">`;
+    if(editing)h+=`<input class="edit-in sec-in" id="in-${s.id}" data-sec="${s.id}" value="${esc(s.title)}"><button class="del" data-delsec="${s.id}" aria-label="Borrar bloque">×</button>`;
+    else h+=`<span class="sec-title">${esc(s.title)}</span><span class="sec-meta ${c.t&&c.d===c.t?'ok':''}">${c.d===c.t&&c.t?'✓ Completado':c.d+'/'+c.t}</span>`;
+    h+=`</div><div class="card">`;
+    s.items.forEach((it,ii)=>{
+      const sd=it.sub.filter(x=>x.done).length;
+      h+=`<div class="item ${it.done?'done':''} ${(it.open||editing)?'open':''}"><div class="row">`;
+      if(editing){
+        h+=`<button class="mv" data-up="${s.id}|${it.id}" aria-label="Subir">↑</button><input class="edit-in" id="in-${it.id}" data-item="${s.id}|${it.id}" value="${esc(it.text)}"><button class="del" data-del="${s.id}|${it.id}" aria-label="Borrar">×</button>`;
+      }else{
+        h+=`<button class="check ${it.done?'on':''} ${!it.done&&sd?'partial':''}" data-tog="${s.id}|${it.id}" aria-label="Marcar" aria-pressed="${it.done}">${CHK}</button>
+        <div class="txt" data-${it.sub.length?'open':'tog'}="${s.id}|${it.id}">${esc(it.text)}${it.sub.length?`<small>${sd} de ${it.sub.length} subtareas</small>`:''}</div>`;
+        if(it.sub.length)h+=`<button class="chev" data-open="${s.id}|${it.id}" aria-label="Ver subtareas">${CHEV}</button>`;
+      }
+      h+=`</div>`;
+      if(it.sub.length||editing){
+        h+=`<div class="sub">`;
+        it.sub.forEach(x=>{
+          h+=`<div class="item ${x.done?'done':''}"><div class="row">`;
+          if(editing)h+=`<input class="edit-in" id="in-${x.id}" data-subin="${s.id}|${it.id}|${x.id}" value="${esc(x.text)}"><button class="del" data-delsub="${s.id}|${it.id}|${x.id}" aria-label="Borrar">×</button>`;
+          else h+=`<button class="check ${x.done?'on':''}" data-subtog="${s.id}|${it.id}|${x.id}" aria-label="Marcar" aria-pressed="${x.done}">${CHK}</button><div class="txt" data-subtog="${s.id}|${it.id}|${x.id}">${esc(x.text)}</div>`;
+          h+=`</div></div>`;
+        });
+        if(editing)h+=`<button class="add" data-addsub="${s.id}|${it.id}">+ Añadir subtarea</button>`;
+        h+=`</div>`;
+      }
+      h+=`</div>`;
+    });
+    if(editing)h+=`<button class="add" data-additem="${s.id}">+ Añadir tarea</button>`;
+    h+=`</div></section>`;
+  });
+  if(editing)h+=`<button class="btn" style="width:100%" data-addsec="1">+ Añadir bloque (otra fecha)</button>`;
+  document.getElementById('list').innerHTML=h;
+}
+const find=(sid,iid)=>{const s=S.sections.find(x=>x.id===sid);return{s,it:s&&iid?s.items.find(x=>x.id===iid):null}};
+
+document.getElementById('list').addEventListener('click',e=>{
+  const el=e.target.closest('[data-tog],[data-subtog],[data-open],[data-del],[data-delsub],[data-delsec],[data-addsub],[data-additem],[data-addsec],[data-up]');
+  if(!el)return; const ds=el.dataset;
+  if(ds.tog){const[a,b]=ds.tog.split('|');const{it}=find(a,b);it.done=!it.done;it.sub.forEach(x=>x.done=it.done);if(navigator.vibrate)try{navigator.vibrate(12)}catch(_){}}
+  else if(ds.subtog){const[a,b,c]=ds.subtog.split('|');const{it}=find(a,b);const x=it.sub.find(y=>y.id===c);x.done=!x.done;it.done=it.sub.every(y=>y.done);if(it.done){it.open=false;toast('¡Subtareas listas! ✓')}}
+  else if(ds.open){const[a,b]=ds.open.split('|');const{it}=find(a,b);it.open=!it.open}
+  else if(ds.del){const[a,b]=ds.del.split('|');const{s}=find(a);s.items=s.items.filter(x=>x.id!==b)}
+  else if(ds.delsub){const[a,b,c]=ds.delsub.split('|');const{it}=find(a,b);it.sub=it.sub.filter(x=>x.id!==c)}
+  else if(ds.delsec){S.sections=S.sections.filter(x=>x.id!==ds.delsec)}
+  else if(ds.addsub){const[a,b]=ds.addsub.split('|');const{it}=find(a,b);const n={id:uid(),text:'',done:false};it.sub.push(n);it.done=false;save();render();focusIn(n.id);return}
+  else if(ds.additem){const{s}=find(ds.additem);const n=T('');s.items.push(n);save();render();focusIn(n.id);return}
+  else if(ds.addsec){const n={id:uid(),title:'Nuevo bloque',items:[]};S.sections.push(n);save();render();focusIn(n.id);return}
+  else if(ds.up){const[a,b]=ds.up.split('|');const{s}=find(a);const i=s.items.findIndex(x=>x.id===b);if(i>0)[s.items[i-1],s.items[i]]=[s.items[i],s.items[i-1]]}
+  save();render();checkAll();
+});
+document.getElementById('list').addEventListener('input',e=>{
+  const ds=e.target.dataset,v=e.target.value;
+  if(ds.k==='title')S.title=v;
+  else if(ds.sec)find(ds.sec).s.title=v;
+  else if(ds.item){const[a,b]=ds.item.split('|');find(a,b).it.text=v}
+  else if(ds.subin){const[a,b,c]=ds.subin.split('|');find(a,b).it.sub.find(x=>x.id===c).text=v}
+  save();
+});
+function focusIn(id){const el=document.getElementById('in-'+id);if(el){el.focus();el.scrollIntoView({block:'center',behavior:'smooth'})}}
+
+document.getElementById('editBtn').onclick=()=>{
+  if(editing){S.sections.forEach(s=>{s.items=s.items.filter(i=>i.text.trim());s.items.forEach(i=>i.sub=i.sub.filter(x=>x.text.trim()))});save()}
+  editing=!editing;render();scrollTo({top:0,behavior:'smooth'});
+};
+document.getElementById('resetBtn').onclick=()=>modal('🗓️','¿Empezar un mes nuevo?','Se desmarcarán todas las tareas. Tus tareas y textos se mantienen.',[['Sí, empezar de cero','primary',resetAll],['Cancelar','',null]]);
+function resetAll(){S.sections.forEach(s=>s.items.forEach(i=>{i.done=false;i.open=false;i.sub.forEach(x=>x.done=false)}));S.celebrated=false;save();render();toast('Listo, mes nuevo a estrenar 💪')}
+
+function checkAll(){
+  const{t,d}=counts();
+  if(t&&t===d&&!S.celebrated){S.celebrated=true;save();setTimeout(celebrate,250)}
+  else if(d<t&&S.celebrated){S.celebrated=false;save()}
+}
+const MSGS=[['🏆','¡Mes cerrado, Sergio!','Todo revisado, actualizado y programado. Tu yo del futuro te lo agradece.'],['🚀','¡Checklist completado!','Carteras al día, compras programadas. Ahora a dejar que el interés compuesto trabaje.'],['🎉','¡Enhorabuena, todo hecho!','100% completado. Disfruta del resto del día sin pendientes.']];
+function celebrate(){const m=MSGS[Math.floor(Math.random()*MSGS.length)];confetti();modal(m[0],m[1],m[2],[['¡Genial!','primary',null],['Empezar mes nuevo','',resetAll]])}
+
+function modal(icon,title,text,btns){
+  const o=document.createElement('div');o.className='overlay';
+  o.innerHTML=`<div class="dialog" role="dialog" aria-modal="true"><div class="trophy">${icon}</div><h2>${title}</h2><p>${text}</p><div class="btns">${btns.map((b,i)=>`<button class="btn ${b[1]}" data-i="${i}" type="button">${b[0]}</button>`).join('')}</div></div>`;
+  o.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b||e.target===o){o.remove();const f=b&&btns[+b.dataset.i][2];if(f)f()}});
+  document.body.appendChild(o);o.querySelector('.btn').focus();
+}
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}
+function confetti(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const c=document.getElementById('confetti'),x=c.getContext('2d');c.hidden=false;
+  const W=c.width=innerWidth*devicePixelRatio,H=c.height=innerHeight*devicePixelRatio;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';
+  const cols=['#4F46E5','#22B35E','#FFC53D','#FF6B70','#7CF0A9','#8C86FF'];
+  const P=Array.from({length:160},()=>({x:W/2,y:H*.35,vx:(Math.random()-.5)*26*devicePixelRatio,vy:(-Math.random()*22-6)*devicePixelRatio,r:(Math.random()*6+4)*devicePixelRatio,c:cols[Math.random()*cols.length|0],a:Math.random()*6,s:Math.random()*.3-.15}));
+  let f=0;(function tick(){x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=.6*devicePixelRatio;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.a+=p.s;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(++f<170)requestAnimationFrame(tick);else{x.clearRect(0,0,W,H);c.hidden=true}})();
+}
+render();
+</script>
+
+</html>
