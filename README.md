@@ -1,5 +1,7 @@
-# Checklist Sergio
+# Checklist
 
-Checklist móvil de inversiones (día 30 y 2–3 de cada mes).
+Checklist mensual de inversiones de Sergio. App web instalable (PWA), modo claro/oscuro, funciona sin conexión.
 
-https://pietor12-spec.github.io/checklist-mensual/
+**Abrir:** https://pietor12-spec.github.io/checklist-mensual/
+
+Los datos se guardan en el navegador de cada dispositivo; desde el menú ⋯ puedes exportar/importar una copia.
