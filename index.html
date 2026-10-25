@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Checklist">
-<link rel="manifest" href="manifest.webmanifest?v=4">
+<link rel="manifest" href="manifest.webmanifest?v=5">
 <link rel="icon" href="icon.svg?v=4" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png?v=4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -500,8 +500,11 @@ const standalone=matchMedia('(display-mode: standalone)').matches||navigator.sta
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e});
 if(standalone)$('miInstall').style.display='none';
 $('miInstall').onclick=async()=>{
-  if(deferred){deferred.prompt();await deferred.userChoice;deferred=null;closeSheet()}
-  else $('iosHint').classList.add('on'),$('iosHint').innerHTML=isIOS?'En iPhone: pulsa <b>Compartir</b> en Safari y elige <b>Añadir a pantalla de inicio</b>.':'Abre el menú del navegador y elige <b>Instalar app</b> o <b>Añadir a pantalla de inicio</b>.';
+  if(deferred){deferred.prompt();const r=await deferred.userChoice;deferred=null;closeSheet();if(r.outcome==='accepted')toast('Instalando…');return}
+  const H=$('iosHint');H.classList.add('on');
+  H.innerHTML=isIOS
+    ?'<b>iPhone:</b> abre este enlace en <b>Safari</b>, pulsa <b>Compartir</b> y elige <b>Añadir a pantalla de inicio</b>.'
+    :'<b>1.</b> Ábrela en <b>Google Chrome</b> (no en el navegador de Xiaomi ni dentro de otra app).<br><b>2.</b> Menú <b>⋮</b> arriba a la derecha → <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b>.<br><b>3.</b> En Xiaomi/Redmi/POCO, si no aparece el icono: Ajustes → Aplicaciones → Chrome → Permisos → activa <b>Accesos directos en pantalla de inicio</b> y repite.';
 };
 addEventListener('appinstalled',()=>{$('miInstall').style.display='none';toast('App instalada')});
 
